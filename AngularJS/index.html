@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="App">
+    <head>
+        <meta charset="utf-8">
+        <title>Angular Example</title>
+        <script type="text/javascript" src="./node_modules/angular/angular.js"></script>
+        <script type="text/javascript" src="./app.js"></script>
+        <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="./style.css" />
+
+    </head>
+    <body ng-controller="reportsApi">
+          
+        <fieldset class="scheduler-border">
+          <legend class="scheduler-border">Reports:</legend>
+            <div class="table-responsive">  
+            <button class="btn btn-primary" ng-click="form=!form">Add</button>
+            <table border="1" class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Created by</th>
+                </tr>
+              </thead>
+              <tr ng-repeat="item in reports">
+                <td *ngIf="item" ng-bind="item.id "></td>
+                <td *ngIf="item" ng-bind="item.title "></td>
+                <td *ngIf="item" ng-bind="item.report_type "></td>
+                <td *ngIf="item" ng-bind="item.description "></td>
+                <td *ngIf="item" ng-bind="item.created_by "></td>
+                <td>
+                  <a class="edit" id="toggle-filter" ng-click="toggleFilter(item)">Edit</a>
+                  <a class="remove" ng-click="removeReportItem(item)">Remove</a>
+                </td>
+              </tr>
+            </tr>
+          </table> 
+          </div> 
+          <div class="container" ng-hide="toggle">
+              <p>
+                <label>Title</label>
+                <input type="text" ng-model="title" />
+                <label>Description</label>
+                <input type="text " ng-model="description" />
+              </p>
+              <div class="row">
+                <div class="col-md-7">
+                  <button class="btn btn-primary btn-xs" ng-click="updateReportItem(item)">Update</button>
+                </div>
+              </div>
+              <p></p>
+              </div>
+          <div class="container" ng-show="form">
+                <form name="addForm">
+
+                <label>Title</label>
+                <input type="text" ng-model="title" />
+                <label>Description</label>
+                <input type="text " ng-model="description" />
+                 <label>Created By</label>
+                <input type="text " ng-model="created_by" />
+                <select ng-model="report_type" ng-options="item.keys for item in types">
+                </select>
+              <div class="row">
+                <div class="col-md-7">
+                   <input class="btn btn-primary btn-xs" type="submit" id="submit" value="Save" ng-click="addReportItem()"/>
+                </div>
+              </div>
+             </form>
+          </div>
+        </fieldset>
+    </body>
+</html>
