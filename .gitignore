@@ -1,0 +1,11 @@
+# Compiled source #
+###################
+**pyc
+**.iml
+**.xml
+node_modules/
+.vscode/
+.idea/
+__pycache__/
+migrations/
+env/
