@@ -2,14 +2,14 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Report
+from reports.models import Report
 
 
 class ReportSerializer(serializers.ModelSerializer):
 	"""
 	Serializes data into the specified model.
 	"""
-	created_by = serializers.ReadOnlyField(source='created_by.username') # new
+	created_by = serializers.ReadOnlyField(source='created_by.username')
 
 	class Meta:
 		"""
@@ -22,7 +22,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
 	"""
-	Sets permission, user who created the report can only perform deletion.
+	Seriaizes data into user model.
 	"""
 	created_by = serializers.PrimaryKeyRelatedField(
 		many=True, queryset=Report.objects.all())

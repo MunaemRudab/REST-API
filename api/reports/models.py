@@ -33,7 +33,7 @@ class Report(models.Model):
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
+def create_auth_token(sender, instance, created=False, **kwargs):
 	"""
 	Creates token for existing users for authorization. 
 	"""

@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-class IsAdmin(permissions.BasePermission):
+class IsOwner(permissions.BasePermission):
 	"""
 	Defines permissions for delete operation.
 

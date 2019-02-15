@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Report
+from reports.models import Report
 
 # Register your models here.
 class ReportAdmin(admin.ModelAdmin):
