@@ -1,0 +1,2 @@
+# SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = '+d#+ta7+!fg@x@k#^z$qav7pn4z_va3cblq!wi6!&zvq&ilo^t'

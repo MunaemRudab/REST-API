@@ -1,11 +1,19 @@
 # Compiled source #
 ###################
 **pyc
-**.iml
-**.xml
+
+# Database file #
+###################
+**sqlite3
+
+# Folders #
+###################
 node_modules/
 .vscode/
 .idea/
 __pycache__/
 migrations/
 env/
+
+**.iml
+**.xml

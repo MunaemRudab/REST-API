@@ -20,7 +20,6 @@ from reports.views import login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')), # new
-    path('api/login/', login), # new
+    path('api/login/', login),
     path('', include('reports.urls')),
 ]

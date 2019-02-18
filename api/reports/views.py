@@ -61,4 +61,4 @@ class ReportDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwner, ) # new
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwner, ) 
