@@ -17,7 +17,7 @@ from reports.serializers import ReportSerializer, UserSerializer
 @api_view(["POST"])
 def login(request):
     """
-    Creates and returns token for the user,
+    Creates and returns token for the user by validating given username and password.
 
     Args:
         username (str) : username
@@ -44,7 +44,7 @@ def login(request):
 
 class ReportList(generics.ListCreateAPIView):
     """
-    Lists all reports in a queryset
+    Lists all reports irrespective of current logged in user.
 
     """
     queryset = Report.objects.all()
@@ -57,7 +57,7 @@ class ReportList(generics.ListCreateAPIView):
 
 class ReportDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Detailed view of the respective report.
+    Returns detail of the respective report item. 
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer

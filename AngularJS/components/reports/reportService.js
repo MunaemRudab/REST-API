@@ -1,13 +1,13 @@
 function ReportService($http, $q) {
-	
-	var reportService_config = {
+
+    var reportService_config = {
         /*config object defined in current controller's scope
         for the accessing constant variables.*/
         current_report_item: [],
         auth_token: "",
         api_url: "http://localhost:8000/"
-	}
-	
+    }
+
     this.get_token = function() {
         /*returns token value from service by a POST request 
         passing username and password as arguments. */
@@ -19,9 +19,12 @@ function ReportService($http, $q) {
                 'password': '1q1q1q1q'
             }
         });
-        return (request.then(function(response) {
-            reportService_config.auth_token = "Token " + response.data.token;
-        }, handleError));
+        return (request.then(
+            function(response) {
+                reportService_config.auth_token = "Token " + response.data.token;
+            }, 
+            handleError)
+        );
     }
 
     this.get_reports = function() {
@@ -29,8 +32,8 @@ function ReportService($http, $q) {
         var request = $http({
             method: "GET",
             url: reportService_config.api_url + 'reports/'
-
         });
+
         return (request.then(handleSuccess, handleError))
     }
 
@@ -45,6 +48,7 @@ function ReportService($http, $q) {
             },
             data: report_item_to_add
         });
+
         return (request.then(handleSuccess, handleError));
     }
 
@@ -73,6 +77,7 @@ function ReportService($http, $q) {
             },
             data: report_item
         });
+
         return (request.then(handleSuccess, handleError));
     }
 
@@ -83,16 +88,11 @@ function ReportService($http, $q) {
 
     function handleError(response) {
         /*Status 403, forbidden action user isnot allowed to perform certain action.
-       	else returns the error messsage.*/
+        else returns the error messsage.*/
         if (response.status === 403) {
             console.log(response.data.detail);
             return false;
-		} 
-		
-		else if (!angular.isObject(response.data) ||
-            !response.data.message) {
-            return ($q.reject("An unknown error occurred."));
-        }
+        } 
 
         return ($q.reject(response.data.message));
     }
