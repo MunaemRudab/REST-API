@@ -20,22 +20,36 @@ function ReportListController(reportService) {
         }
     ];
 
-    reportService.get_token().then(
-        //gets token from service to authenticate.
-        function() {
-            console.warn();
-        },
-        function(errorMessage) {
-            console.warn(errorMessage);
-        }
-    );
+    $ctrl.$onInit(){
+        get_token();
+        get_reports();
+    }
 
-    reportService.get_reports().then(
-        list_reports,
-        function(errorMessage) {
-            console.warn(errorMessage);
-        }
-    );
+    function get_token(){
+        reportService.get_token().then(
+        //gets token from service to authenticate.
+            function() {
+                console.warn();
+            },
+            function(errorMessage) {
+                console.warn(errorMessage);
+            }
+        );
+    }
+
+    function get_reports(){
+        reportService.get_reports().then(
+            list_reports,
+            function(errorMessage) {
+                console.warn(errorMessage);
+            }
+        );
+    }
+
+    function list_reports(response) {
+        //sets response data to list view (reports)
+        $ctrl.reports = response.data;
+    }
 
     $ctrl.saveReportItem = function() {
 
@@ -78,6 +92,15 @@ function ReportListController(reportService) {
         );
     };
 
+    function get_form_data() {
+        //returns form fields values.
+        return {
+            'title': $ctrl.report.title,
+            'description': $ctrl.report.description,
+            'report_type': $ctrl.report.types.keys
+        };
+    }
+
     $ctrl.removeReportItem = function(report_item) {
         //Removes selected report item and updates list view in success.
         current_report_item = report_item;
@@ -96,27 +119,6 @@ function ReportListController(reportService) {
         return $ctrl.reports.findIndex(r => r.id === item_id);
     }
 
-    function get_form_data() {
-        //returns form fields values.
-        return {
-            'title': $ctrl.report.title,
-            'description': $ctrl.report.description,
-            'report_type': $ctrl.report.types.keys
-        };
-    }
-
-    function list_reports(response) {
-        //sets response data to list view (reports)
-        $ctrl.reports = response.data;
-    }
-
-    function populateFormFields(report_item) {
-        $ctrl.report.title = report_item.title;
-        $ctrl.report.description = report_item.description;
-        $ctrl.report_type = report_item.report_type;
-        current_report_item = report_item;
-    }
-
     $ctrl.toggleAddEditForm = function(report_item) {
         $ctrl.showAddEditForm = !$ctrl.showAddEditForm;
 
@@ -128,5 +130,12 @@ function ReportListController(reportService) {
             $ctrl.isUpdate = false;
             $ctrl.report = angular.copy($ctrl.master);
         }
+    }
+
+    function populateFormFields(report_item) {
+        $ctrl.report.title = report_item.title;
+        $ctrl.report.description = report_item.description;
+        $ctrl.report_type = report_item.report_type;
+        current_report_item = report_item;
     }
 }
