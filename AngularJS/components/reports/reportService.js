@@ -1,89 +1,64 @@
 function ReportService($http, $q) {
 
     var reportService_config = {
-        /*config object defined in current controller's scope
-        for the accessing constant variables.*/
         current_report_item: [],
-        auth_token: "",
-        api_url: "http://localhost:8000/"
+        apiURL: "http://localhost:8000/"
     }
 
-    this.get_token = function() {
-        /*returns token value from service by a POST request 
+    this.getUserToken = function() {
+        /*gets token value from service by a POST request 
         passing username and password as arguments. */
-        var request = $http({
+        $http({
             method: "POST",
-            url: reportService_config.api_url + 'api/login/',
+            url: reportService_config.apiURL + 'api/login/',
             data: {
                 'username': 'test',
                 'password': '1q1q1q1q'
             }
-        });
-        return (request.then(
+        }).then(
             function(response) {
-                reportService_config.auth_token = "Token " + response.data.token;
+                $http.defaults.headers.common.Authorization = "Token " + response.data.token;
             }, 
-            handleError)
-        );
+            handleError);
     }
 
-    this.get_reports = function() {
+    this.getReports = function() {
         //returns reports list from service by a GET request.
-        var request = $http({
+        return $http({
             method: "GET",
-            url: reportService_config.api_url + 'reports/'
+            url: reportService_config.apiURL + 'reports/'
         });
-
-        return (request.then(handleSuccess, handleError))
     }
 
-    this.add_report_item = function(report_item_to_add) {
-        /*adds report_item_to_add.
+    this.addReport = function(newReportItem) {
+        /*adds newReportItem.
         Token passed as Authorization header to verify add operation.*/
-        var request = $http({
+        return $http({
             method: "POST",
-            url: reportService_config.api_url + 'reports/',
-            headers: {
-                'Authorization': reportService_config.auth_token
-            },
-            data: report_item_to_add
+            url: reportService_config.apiURL + 'reports/',
+            data: newReportItem
         });
 
-        return (request.then(handleSuccess, handleError));
     }
 
-    this.update_report_item = function(report_item) {
-        /*updates report_item.
+    this.updateReport = function(reportItem) {
+        /*updates reportItem.
         Token passed as Authorization header to verify update operation.*/
-        var request = $http({
+        reportItem.report_type = reportItem.types.keys;
+        return $http({
             method: "PUT",
-            url: reportService_config.api_url + 'reports/' + report_item.id + '/',
-            headers: {
-                'Authorization': reportService_config.auth_token,
-            },
-            data: report_item
+            url: reportService_config.apiURL + 'reports/' + reportItem.id + '/',
+            data: reportItem
         });
-        return (request.then(handleSuccess, handleError));
     }
 
-    this.remove_report_item = function(report_item) {
-        /*deletes report_item.
+    this.removeReport = function(reportId) {
+        /*deletes reportItem.
         Token passed as Authorization header to verify delete operation.*/
-        var request = $http({
+        return $http({
             method: 'DELETE',
-            url: reportService_config.api_url + 'reports/' + report_item.id + '/',
-            headers: {
-                'Authorization': reportService_config.auth_token
-            },
-            data: report_item
+            url: reportService_config.apiURL + 'reports/' + reportId + '/',
         });
-
-        return (request.then(handleSuccess, handleError));
-    }
-
-    function handleSuccess(response) {
-        //returns service response
-        return (response);
     }
 
     function handleError(response) {
@@ -93,7 +68,6 @@ function ReportService($http, $q) {
             console.log(response.data.detail);
             return false;
         } 
-
         return ($q.reject(response.data.message));
     }
 }

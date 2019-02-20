@@ -11,13 +11,13 @@ from rest_framework.response import Response
 
 from reports.models import Report
 from reports.permissions import IsOwner
-from reports.serializers import ReportSerializer, UserSerializer
+from reports.serializers import ReportSerializer
 
 @csrf_exempt
 @api_view(["POST"])
 def login(request):
     """
-    Creates and returns token for the user by validating given username and password.
+    Creates and returns token for the user,
 
     Args:
         username (str) : username
@@ -42,10 +42,10 @@ def login(request):
 
     return Response({'token': token.key}, status=status.HTTP_200_OK)
 
+
 class ReportList(generics.ListCreateAPIView):
     """
-    Lists all reports irrespective of current logged in user.
-
+    Creates a read-only endpoint that lists all available report instances 
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
@@ -57,8 +57,8 @@ class ReportList(generics.ListCreateAPIView):
 
 class ReportDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Returns detail of the respective report item. 
+    Retrieve, update or delete for detail view of individual report.
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwner, ) 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwner, )

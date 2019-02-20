@@ -9,16 +9,18 @@ from datetime import date
 
 
 class Report(models.Model):
-    """
-    Report model definition
-    """
-    report_type_choices = (
-        ('AN', 'annual'),
-        ('MO', 'monthly'),
-        ('WE', 'weekly')
+
+    ANNUAL = 'AN'
+    MONTHLY = 'MO'
+    WEEKLY = 'WE'
+
+    Types = (
+        (ANNUAL, 'annual'),
+        (MONTHLY, 'monthly'),
+        (WEEKLY, 'weekly')
     )
     title = models.CharField(max_length=50)
-    report_type = models.CharField(max_length=2, choices=report_type_choices)
+    report_type = models.CharField(max_length=2, choices=Types, default=ANNUAL)
     description =  models.CharField(max_length=250, blank=True, null=True)
     resolved_by = models.CharField(max_length=30, blank=True, null=True)
     resolved_on = models.DateField(blank=True, null=True)
@@ -30,7 +32,6 @@ class Report(models.Model):
         Sets ordering of the data by title.
         """
         ordering = ('title',)
-
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance, created=False, **kwargs):

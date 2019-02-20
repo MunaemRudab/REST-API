@@ -1,9 +1,14 @@
-angular.module("reportApp", ['main']);
-var app = angular.module("main", []);
+var app = angular.module("reportApp", ['main']);
+var main = angular.module("main", [])
 
-angular.module('reportApp')
-    .service('reportService', ReportService)
+main.run(['reportService', 
+	function(ReportService) {
+		ReportService.getUserToken();
+	}
+]);
+
+main.service('reportService', ReportService)
     .component('reportList', {
-        templateUrl: 'components/CRUD/reportList.html',
+        templateUrl: 'components/reports/reportList.html',
         controller: ReportListController
     })

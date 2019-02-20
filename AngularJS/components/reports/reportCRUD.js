@@ -1,59 +1,41 @@
 function ReportListController(reportService) {
     //Lists all reports in tabular form, with add, edit and remove options against each report item.
     var $ctrl = this;
-    $ctrl.master = {};
-    $ctrl.report = {};
-    $ctrl.isUpdate = false;
-    $ctrl.current_report_item = {};
-    $ctrl.types = [
-        {
-            keys: "AN",
-            value: "Annual"
-        }, 
-        {
-            keys: "MO",
-            value: "Monthly"
-        }, 
-        {
-            keys: "WE",
-            value: "Weekly"
-        }
-    ];
-
-    $ctrl.$onInit(){
-        get_token();
-        get_reports();
-    }
-
-    function get_token(){
-        reportService.get_token().then(
-        //gets token from service to authenticate.
-            function() {
-                console.warn();
-            },
-            function(errorMessage) {
-                console.warn(errorMessage);
+    $ctrl.params = {
+        defaultReport : {},
+        report : {},
+        isUpdate : false,
+        types : [
+            {
+                keys: "AN",
+                value: "Annual"
+            }, 
+            {
+                keys: "MO",
+                value: "Monthly"
+            }, 
+            {
+                keys: "WE",
+                value: "Weekly"
             }
-        );
+        ]
+    };
+
+    $ctrl.$onInit = function(){
+        reportService.getUserToken();
+        reportService.getReports().then(
+            listReports, handleError);
     }
 
-    function get_reports(){
-        reportService.get_reports().then(
-            list_reports,
-            function(errorMessage) {
-                console.warn(errorMessage);
-            }
-        );
-    }
-
-    function list_reports(response) {
+    function listReports(response) {
         //sets response data to list view (reports)
         $ctrl.reports = response.data;
     }
 
     $ctrl.saveReportItem = function() {
-
-        if ($ctrl.isUpdate) {
+        /*saves new/existing report item on the basis of 'isUpdate' variable.
+        isUpdate = true for update report and false for adding new report.*/
+        if ($ctrl.params.isUpdate) {
             updateReportItem();
         }
         else {
@@ -62,80 +44,85 @@ function ReportListController(reportService) {
     }
 
     function updateReportItem() {
-        /*updates report item by passing report_item as an argument, 
+        /*updates report item by passing report_item as an argument,
         and sets new values of item in success.*/
-        report_item = current_report_item
-        report_item.title = $ctrl.report.title;
-        report_item.description = $ctrl.report.description;
-        reportService.update_report_item(report_item).then(
-            function update(response) {
-
-                if (response) {
-                    $ctrl.reports[getIndex(current_report_item.id)] = response.data;
-                    $ctrl.editForm = !$ctrl.editForm;
+        reportService.updateReport($ctrl.params.report).then(
+            function (response) {
+                if (response.data != null) {
+                    var index = $ctrl.reports.indexOf($ctrl.params.report);
+                    if(index > -1){
+                        $ctrl.reports[index] = response.data;
+                        $ctrl.showAddEditForm = !$ctrl.showAddEditForm;
+                    }
                 }
             }
-        );
+            ,handleError);
     };
 
     function addReportItem() {
         /*Adds new report item by getting values from form fields,
         and updates the list view in success.*/
-        reportService.add_report_item(get_form_data()).then(
-            function add(response) {
-
+        reportService.addReport(mapFormFieldToJSON()).then(
+            function (response) {
                 if (response.status === 201) {
                     $ctrl.reports.push(response.data);
-                    $ctrl.showAddForm = false;
+                    $ctrl.showAddEditForm = false;
                 }
             }
-        );
+            ,handleError);
     };
 
-    function get_form_data() {
-        //returns form fields values.
+    function mapFormFieldToJSON() {
+        //maps form fields values to json format.
         return {
-            'title': $ctrl.report.title,
-            'description': $ctrl.report.description,
-            'report_type': $ctrl.report.types.keys
+            'title': $ctrl.params.report.title,
+            'description': $ctrl.params.report.description,
+            'report_type': $ctrl.params.report.types.keys
         };
     }
 
-    $ctrl.removeReportItem = function(report_item) {
+    $ctrl.removeReportItem = function(reportItem) {
         //Removes selected report item and updates list view in success.
-        current_report_item = report_item;
-        reportService.remove_report_item(report_item).then(
-            function remove(response) {
-
+        reportService.removeReport(reportItem.id).then(
+            function (response) {
                 if (response.status === 204) {
-                    $ctrl.reports.splice(getIndex(current_report_item.id), 1);
+                    if($ctrl.reports.indexOf(reportItem) > -1){
+                        $ctrl.reports.splice($ctrl.reports.indexOf(reportItem), 1);
+                        $ctrl.showAddEditForm = false;
+                    }
                 }
             }
-        );
+        ,
+        handleError);
     };
 
-    function getIndex(item_id) {
-        //returns index of the respective report item.
-        return $ctrl.reports.findIndex(r => r.id === item_id);
+    function handleError(response) {
+        /*Status 403, forbidden action user isnot allowed to perform certain action.
+        else returns the error messsage.*/
+        if (response.status === 403) {
+            console.log(response.data.detail);
+            return false;
+        } 
+        return ($q.reject(response.data.message));
     }
 
-    $ctrl.toggleAddEditForm = function(report_item) {
+    $ctrl.toggleAddEditForm = function(reportItem) {
         $ctrl.showAddEditForm = !$ctrl.showAddEditForm;
 
-        if (report_item.item) {
-            $ctrl.isUpdate = true;
-            populateFormFields(report_item.item);
+        if (reportItem.item) {
+            $ctrl.params.isUpdate = true;
+            $ctrl.params.report = reportItem.item;
+            populateFormFields(reportItem.item);
         }
         else {
-            $ctrl.isUpdate = false;
-            $ctrl.report = angular.copy($ctrl.master);
+            $ctrl.params.isUpdate = false;
+            $ctrl.params.report = angular.copy($ctrl.params.defaultReport);
         }
     }
 
-    function populateFormFields(report_item) {
-        $ctrl.report.title = report_item.title;
-        $ctrl.report.description = report_item.description;
-        $ctrl.report_type = report_item.report_type;
-        current_report_item = report_item;
+    function populateFormFields(reportItem) {
+        $ctrl.params.report.title = reportItem.title;
+        $ctrl.params.report.description = reportItem.description;
+        $ctrl.params.report_type = reportItem.report_type;
     }
 }
