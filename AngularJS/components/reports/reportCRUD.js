@@ -55,8 +55,8 @@ function ReportListController(reportService) {
                         $ctrl.showAddEditForm = !$ctrl.showAddEditForm;
                     }
                 }
-            }
-            ,handleError);
+            }, 
+            handleError);
     };
 
     function addReportItem() {
@@ -68,8 +68,8 @@ function ReportListController(reportService) {
                     $ctrl.reports.push(response.data);
                     $ctrl.showAddEditForm = false;
                 }
-            }
-            ,handleError);
+            }, 
+            handleError);
     };
 
     function mapFormFieldToJSON() {
@@ -91,9 +91,8 @@ function ReportListController(reportService) {
                         $ctrl.showAddEditForm = false;
                     }
                 }
-            }
-        ,
-        handleError);
+            }, 
+            handleError);
     };
 
     function handleError(response) {
