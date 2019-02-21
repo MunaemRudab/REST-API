@@ -22,7 +22,6 @@ function ReportListController(reportService) {
     };
 
     $ctrl.$onInit = function(){
-        reportService.getUserToken();
         reportService.getReports().then(
             listReports, handleError);
     }
@@ -39,7 +38,7 @@ function ReportListController(reportService) {
             updateReportItem();
         }
         else {
-            addReportItem();
+            createReportItem();
         }
     }
 
@@ -59,10 +58,10 @@ function ReportListController(reportService) {
             handleError);
     };
 
-    function addReportItem() {
-        /*Adds new report item by getting values from form fields,
+    function createReportItem() {
+        /*Cerates new report item by getting values from form fields,
         and updates the list view in success.*/
-        reportService.addReport(mapFormFieldToJSON()).then(
+        reportService.createReport(mapFormFieldToJSON()).then(
             function (response) {
                 if (response.status === 201) {
                     $ctrl.reports.push(response.data);
@@ -98,20 +97,23 @@ function ReportListController(reportService) {
     function handleError(response) {
         /*Status 403, forbidden action user isnot allowed to perform certain action.
         else returns the error messsage.*/
-        if (response.status === 403) {
+        if(response.status === -1){
+            return false;
+        }
+        else if (response.status === 403) {
             console.log(response.data.detail);
             return false;
         } 
-        return ($q.reject(response.data.message));
+        return (response.data.message);
     }
 
     $ctrl.toggleAddEditForm = function(reportItem) {
-        $ctrl.showAddEditForm = !$ctrl.showAddEditForm;
+        $ctrl.showAddEditForm = true;
 
-        if (reportItem.item) {
+        if (reportItem.title) {
             $ctrl.params.isUpdate = true;
-            $ctrl.params.report = reportItem.item;
-            populateFormFields(reportItem.item);
+            $ctrl.params.report = reportItem;
+            populateFormFields(reportItem);
         }
         else {
             $ctrl.params.isUpdate = false;

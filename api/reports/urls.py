@@ -1,8 +1,10 @@
 # reports/urls.py
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
-from reports import views
 from rest_framework.authtoken import views as auth
+from rest_framework.urlpatterns import format_suffix_patterns
+
+from django.urls import path
+
+from reports import views
 
 urlpatterns = [
     path('reports/', views.ReportList.as_view()),

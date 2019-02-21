@@ -1,6 +1,7 @@
 """For serializing our data in json """
-from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from django.contrib.auth.models import User
 
 from reports.models import Report
 

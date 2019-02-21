@@ -18,7 +18,7 @@
             <td ng-if="item" ng-bind="item.description"></td>
             <td ng-if="item" ng-bind="item.created_by"></td>
             <td>
-                <a class="edit" id="toggle-filter" ng-click="$ctrl.toggleAddEditForm(this)">Edit</a>
+                <a class="edit" id="toggle-filter" ng-click="$ctrl.toggleAddEditForm(item)">Edit</a>
                 <a class="remove" ng-click="$ctrl.removeReportItem(item)">Remove</a>
             </td>
         </tr>
