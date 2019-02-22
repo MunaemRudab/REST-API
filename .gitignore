@@ -1,13 +1,10 @@
-# Compiled source #
-###################
+# Compiled source
 *.pyc
 
-# Database file #
-###################
+# Database file
 db.sqlite3
 
-# Folders #
-###################
+# Folders
 node_modules/
 .vscode/
 .idea/

@@ -1,32 +1,36 @@
 # reports/views.py
-from rest_framework import generics, permissions
-from rest_framework import status
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.template import loader
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics, permissions
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
 
 from reports.models import Report
 from reports.permissions import IsOwner
 from reports.serializers import ReportSerializer
 
+
+def index(request):
+    latest_report_list = Report.objects.order_by('title')[:5]
+    context = {
+        'latest_report_list': latest_report_list,
+    }
+    return render(request, "index.html", context)
+
+
 @csrf_exempt
 @api_view(["POST"])
 def login(request):
     """
-    Creates and returns token for the user,
-
-    Args:
-        username (str) : username
-        password (str) : password
+    Returns token for the user,
 
     Returns:
-        response : token key and status.
-
+        response : token key.
     """
     username = request.data.get("username")
     password = request.data.get("password")

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <button class='btn btn-primary btn-xs' ng-click="$ctrl.toggleAddEditForm(this)">Add
+    <button class='btn btn-primary btn-xs' ng-click="$ctrl.toggleAddEditForm(false, item)">Add
     </button>
     <table border="1" class="table">
         <thead>
@@ -11,15 +11,15 @@
                 <th>Created by</th>
             </tr>
         </thead>
-        <tr ng-repeat="item in $ctrl.reports">
+        <tr ng-repeat="item in $ctrl.params.reports">
             <td ng-if="item" ng-bind="item.id"> </td>
             <td ng-if="item" ng-bind="item.title"></td>
             <td ng-if="item" ng-bind="item.report_type"></td>
             <td ng-if="item" ng-bind="item.description"></td>
             <td ng-if="item" ng-bind="item.created_by"></td>
             <td>
-                <a class="edit" id="toggle-filter" ng-click="$ctrl.toggleAddEditForm(item)">Edit</a>
-                <a class="remove" ng-click="$ctrl.removeReportItem(item)">Remove</a>
+                <a class="edit" id="toggle-filter" ng-click="$ctrl.toggleAddEditForm(true, item)">Edit</a>
+                <a class="remove" ng-click="$ctrl.removeReportItem(item.id)">Remove</a>
             </td>
         </tr>
     </table>
@@ -27,10 +27,10 @@
 <div class="container" ng-show="$ctrl.showAddEditForm">
     <form name="addForm">
         <label>Title </label>
-        <input type="text" ng-model="$ctrl.params.report.title" />
+        <input type="text" ng-model="$ctrl.params.reportItem.title" />
         <label>Description</label>
-        <input type="text " ng-model="$ctrl.params.report.description" />
-        <select ng-model="$ctrl.params.report.types" ng-options="item.value for item in $ctrl.params.types">
+        <input type="text " ng-model="$ctrl.params.reportItem.description" />
+        <select ng-model="$ctrl.params.reportItem.types" ng-options="item.value for item in $ctrl.params.types">
         </select>
         <div class="row">
             <div class="col-md-7">
