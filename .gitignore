@@ -1,0 +1,16 @@
+# Compiled source
+*.pyc
+
+# Database file
+db.sqlite3
+
+# Folders
+node_modules/
+.vscode/
+.idea/
+__pycache__/
+migrations/
+env/
+
+*.iml
+*.xml
