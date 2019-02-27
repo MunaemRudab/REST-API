@@ -15,14 +15,6 @@ from reports.permissions import IsOwner
 from reports.serializers import ReportSerializer
 
 
-def index(request):
-    latest_report_list = Report.objects.order_by('title')[:5]
-    context = {
-        'latest_report_list': latest_report_list,
-    }
-    return render(request, "index.html", context)
-
-
 @csrf_exempt
 @api_view(["POST"])
 def login(request):

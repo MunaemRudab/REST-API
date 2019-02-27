@@ -6,8 +6,7 @@ function ReportService($http, $q) {
             'password': '1q1q1q1q'
         };
 
-        return $http
-                .post('api/login/', data).then(
+        return $http.post('api/login/', data).then(
                     setToken, 
                     function(response) {
                         return response.data.message;

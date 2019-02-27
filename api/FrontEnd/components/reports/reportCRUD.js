@@ -31,11 +31,6 @@ function ReportListController(reportService) {
             handleError);
     }
 
-    function getReports(response){
-        angular.forEach(response.data, function(item){
-            $ctrl.params.reports[item.id] = item;
-        });
-    }
     $ctrl.saveReportItem = function() {
         //saves new/existing report item on the basis of 'isUpdate' variable.
         if ($ctrl.params.isUpdate) {
