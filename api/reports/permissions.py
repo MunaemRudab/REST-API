@@ -2,12 +2,12 @@ from rest_framework import permissions
 
 
 class IsOwner(permissions.BasePermission):
-	"""
-	Custom permission to only allow owners of an object to delete it.
-	"""
+    """
+    Custom permission to only allow owners of an object to delete it.
+    """
 
-	def has_object_permission(self, request, view, obj):
-		if request.method in permissions.SAFE_METHODS:
-			return True
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
 
-		return obj.created_by == request.user
+        return obj.created_by == request.user

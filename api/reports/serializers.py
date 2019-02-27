@@ -9,5 +9,5 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ('id', 'title', 'report_type', 'description',
-                    'created_by', 'resolved_by', 'resolved_on', 'is_resolved')
+        fields = ('id', 'title', 'report_type', 'description', 'created_by', 
+            'resolved_by', 'resolved_on', 'is_resolved')

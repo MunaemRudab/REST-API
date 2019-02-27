@@ -133,5 +133,5 @@ REST_FRAMEWORK = {
      ),
 }
 
-if os.path.isfile('config.py'):
-    from config.py import *
+if os.path.isfile('api/config.py'):
+    from api.config import *
